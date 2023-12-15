@@ -14,8 +14,8 @@
             <ul class="uppercase text-sm links bg-white absolute justify-around h-1/2 w-screen top-0 left-[100vw] flex flex-col sm:flex-row sm:bg-transparent sm:static sm:justify-end items-center list-none">
                 <li class="hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links"><a href="/">Home</a></li>
                 <li class="hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links"><a href="#">Videos</a></li>
-                <li class="hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links"><a href="#">SignIn</a></li>
-                <li class="hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links"><a href="#">SignUp</a></li>
+                <li class="hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links"><a href="#">Login</a></li>
+                <li class="hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links"><a href="/auth/registration.php">Register</a></li>
             </ul>
         </nav>
     </div>

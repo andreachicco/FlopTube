@@ -3,3 +3,6 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="shortcut icon" href="/assets/floptube_logo.svg" type="image/x-icon">
 <script src="/scripts/js/tailwind.config.js"></script>
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+</style>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="overflow-x-hidden" lang="en">
+<html lang="en">
 <head>
     <?php require_once(dirname(__FILE__) . "/common/head.php"); ?>
     <title>FlopTube</title>

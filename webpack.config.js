@@ -4,6 +4,7 @@ module.exports = {
     mode: 'development',
     devtool: 'eval-source-map',
     entry: {
+        close_alert: './src/scripts/ts/close_alert.ts',
         menu_animation: './src/scripts/ts/menu-animation.ts'
     },
     module: {

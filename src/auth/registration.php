@@ -6,15 +6,15 @@
 </head>
 <body class="overflow-x-hidden h-screen">
     <?php 
-        require_once(dirname(__FILE__) . "/../components/component_renderer.php");
-
-        $componentRenderer = new ComponentRenderer();
-
         require_once(dirname(__FILE__) . "/../components/header.php"); 
+
+        $header = new Header();
+        $header->render();  
     ?>
 
     <?php 
         require_once(dirname(__FILE__) . "/../common/data_validation.php");
+
         if($_SERVER["REQUEST_METHOD"] === "POST") {
             $required_fields = ["firstname", "lastname", "email", "pass", "confirm"];
             if(DataValidation::fields_exist($_POST, $required_fields)) {
@@ -36,7 +36,7 @@
         }
     ?>
 
-    <div class="hidden sm:grid w-sm-container sm:w-container h-[45vh] mx-auto rounded-md bg-ft-red bg-banner bg-cover bg-no-repeat bg-center place-self-center"></div>
+    <div class="hidden md:grid w-sm-container sm:w-container h-[45vh] mx-auto rounded-md bg-ft-red bg-banner bg-cover bg-no-repeat bg-center place-self-center"></div>
 
     <section class="flex flex-col w-sm-container mx-auto sm:w-1/2 sm:min-w-[27rem] sm:max-w-[30rem] sm:p-5 sm:bg-white sm:shadow sm:rounded absolute top-1/2 left-1/2 translate-x-minus-50% translate-y-minus-50%">
         <h1 class="mb-0.5 text-2xl sm:text-3xl font-montserrat font-extrabold">Create Account</h1>
@@ -48,10 +48,13 @@
                 require_once(dirname(__FILE__) . "/../common/alert_type.php");
                 
                 $alertBox = new AlertBox($code, AlertType::ERROR);
-                $componentRenderer->set_component($alertBox);
-                $componentRenderer->render();
+                $alertBox->render();
             }    
+
             require_once(dirname(__FILE__) . "/../components/registration_form.php"); 
+
+            $registrationForm = new RegistrationForm();
+            $registrationForm->render();
         ?>
     </section>
 </body>

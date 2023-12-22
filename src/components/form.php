@@ -1,0 +1,1 @@
+<?php interface IForm extends IComponent {} ?>

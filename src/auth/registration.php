@@ -41,17 +41,17 @@
                         $user_created = $user_table->create($user);
                         $connection->close();
                         if($user_created) header("Location: /");
-                        else header("Location: /auth/registration.php?code=Something went wrong");
+                        else header("Location: /auth/registration.php?code=0");
                     }
                     catch(mysqli_sql_exception $e) {
                         $connection->close();
-                        if($e->getCode() == 1062) header("Location: /auth/registration.php?code=Email already in use");
-                        else header("Location: /auth/registration.php?code=Something went wrong");
+                        if($e->getCode() == 1062) header("Location: /auth/registration.php?code=1");
+                        else header("Location: /auth/registration.php?code=0");
                     }
                 }
-                else header("Location: /auth/registration.php?code=Passwords do not match");
+                else header("Location: /auth/registration.php?code=2");
             }
-            else header("Location: /auth/registration.php?code=Please fill in all fields");
+            else header("Location: /auth/registration.php?code=3");
         }
     ?>
 
@@ -61,15 +61,7 @@
         <h1 class="mb-0.5 text-2xl sm:text-3xl font-montserrat font-extrabold">Create Account</h1>
         <p class="mb-5 text-xs font-montserrat sm:text-base">Give us some of your information to get started</p>
         <?php 
-            if(isset($_GET["code"])) {
-                $code = $_GET["code"];
-                require_once(dirname(__FILE__) . "/../components/alert_box.php");
-                require_once(dirname(__FILE__) . "/../common/alert_type.php");
-                
-                $alertBox = new AlertBox($code, AlertType::ERROR);
-                $alertBox->render();
-            }    
-
+            DataValidation::check_code();
             require_once(dirname(__FILE__) . "/../components/registration_form.php"); 
 
             $registrationForm = new RegistrationForm();

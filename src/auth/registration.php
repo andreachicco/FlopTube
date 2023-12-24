@@ -14,6 +14,7 @@
 
     <?php 
         require_once(dirname(__FILE__) . "/../common/data_validation.php");
+        require_once(dirname(__FILE__) . "/../database/connection.php");
 
         if($_SERVER["REQUEST_METHOD"] === "POST") {
             $required_fields = ["firstname", "lastname", "email", "pass", "confirm"];
@@ -23,12 +24,30 @@
                 
                 if($password === $confirm) {
                     require_once(dirname(__FILE__) . "/../common/user.php");
+
                     $user = new User(
                         DataValidation::sanitize($_POST["firstname"]),
                         DataValidation::sanitize($_POST["lastname"]),
                         DataValidation::sanitize($_POST["email"]),
                         $password
                     );
+
+                    $connection = new DBConnection();
+
+                    require_once(dirname(__FILE__) . "/../database/user.table.php");
+                    $user_table = new UserTable($connection);
+
+                    try {
+                        $user_created = $user_table->create($user);
+                        $connection->close();
+                        if($user_created) header("Location: /");
+                        else header("Location: /auth/registration.php?code=Something went wrong");
+                    }
+                    catch(mysqli_sql_exception $e) {
+                        $connection->close();
+                        if($e->getCode() == 1062) header("Location: /auth/registration.php?code=Email already in use");
+                        else header("Location: /auth/registration.php?code=Something went wrong");
+                    }
                 }
                 else header("Location: /auth/registration.php?code=Passwords do not match");
             }

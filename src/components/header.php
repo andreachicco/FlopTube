@@ -29,7 +29,7 @@
                                 } 
                                 else {
                                     print("<li class=\"hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links\"><a href=\"#\">Show Profile</a></li>
-                                    <li class=\"hover:text-ft-red pl-sm-nav-links md:pl-md-nav-links lg:pl-lg-nav-links\"><a href=\"#\">Logout</a></li>");
+                                    <li class=\"hover:text-ft-red pl-sm-nav-links md:pl-md-nav-links lg:pl-lg-nav-links\"><a href=\"/auth/logout.php\">Logout</a></li>");
                                 }
                             print("</ul>
                         </nav>

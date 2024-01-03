@@ -8,8 +8,9 @@
     <?php require_once(dirname(__FILE__) . "/components/header.php"); 
         $header = new Header();
         $header->render();
+
+        $home_text = ((!isset($_SESSION["email"])) ? "FlopTube: like YouTube, but worse" : "Welcome back, " . $_SESSION["firstname"]);
+        print("<h1 class=\"text-ft-red\">{$home_text}</h1>");
     ?>
-    
-    <h1 class="text-ft-red">FlopTube: like YouTube, but worse</h1>
 </body>
 </html>

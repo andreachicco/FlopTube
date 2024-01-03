@@ -22,10 +22,16 @@
                             </div>
                             <ul class=\"z-50 uppercase text-sm links bg-white absolute justify-around h-1/2 w-screen top-0 left-[100vw] flex flex-col sm:flex-row sm:bg-transparent sm:static sm:justify-end items-center list-none\">
                                 <li class=\"hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links\"><a href=\"/\">Home</a></li>
-                                <li class=\"hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links\"><a href=\"#\">Videos</a></li>
-                                <li class=\"hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links\"><a href=\"#\">Login</a></li>
-                                <li class=\"hover:text-ft-red pl-sm-nav-links md:pl-md-nav-links lg:pl-lg-nav-links\"><a href=\"/auth/registration.php\">Register</a></li>
-                            </ul>
+                                <li class=\"hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links\"><a href=\"#\">Videos</a></li>");
+                                if(!isset($_SESSION["email"])) {
+                                    print("<li class=\"hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links\"><a href=\"/auth/login.php\">Login</a></li>
+                                    <li class=\"hover:text-ft-red pl-sm-nav-links md:pl-md-nav-links lg:pl-lg-nav-links\"><a href=\"/auth/registration.php\">Register</a></li>");
+                                } 
+                                else {
+                                    print("<li class=\"hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links\"><a href=\"#\">Show Profile</a></li>
+                                    <li class=\"hover:text-ft-red pl-sm-nav-links md:pl-md-nav-links lg:pl-lg-nav-links\"><a href=\"#\">Logout</a></li>");
+                                }
+                            print("</ul>
                         </nav>
                     </div>
                 </header>

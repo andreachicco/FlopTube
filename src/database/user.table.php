@@ -1,5 +1,6 @@
 <?php 
     // require_once(dirname(__FILE__) . "/../database/connection.php");
+    require_once(dirname(__FILE__) . "/../common/user.php");
 
     class UserTable {
         private DBConnection $db;
@@ -19,6 +20,22 @@
             $stmt = $this->db->prepare($query);
             $stmt->bind_param("ssss", $first_name, $last_name, $email, $password);
             return $stmt->execute();
+        }
+
+        public function get_by_email(string $email): ?User {
+            $query = "SELECT * FROM user WHERE email = ?";
+
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows == 0) {
+                return null;
+            }
+
+            $row = $result->fetch_assoc();
+            return new User($row["first_name"], $row["last_name"], $row["email"], $row["password"]);
         }
     }
 ?>

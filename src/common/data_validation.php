@@ -17,6 +17,10 @@
             return htmlspecialchars(trim($input));
         }
 
+        public static function hash_password(string $password): string {
+            return password_hash($password, PASSWORD_DEFAULT);
+        }
+
         public static function check_code() {
             if(isset($_GET["code"])) {
                 $code = $_GET["code"];

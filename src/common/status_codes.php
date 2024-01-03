@@ -39,6 +39,7 @@
                 1 => new ErrorStatus("Email already in use"),
                 2 => new ErrorStatus("Passwords do not match"),
                 3 => new ErrorStatus("Please fill in all fields"),
+                4 => new ErrorStatus("Invalid email or password"),
             );
 
             return $codes[$code];

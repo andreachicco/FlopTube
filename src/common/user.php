@@ -25,7 +25,7 @@
             $this->firstname = $firstname;
             $this->lastname = $lastname;
             $this->email = $email;
-            $this->password = password_hash($password, PASSWORD_DEFAULT);
+            $this->password = $password;
         }
 
         public function get_firstname(): string {

@@ -8,3 +8,5 @@
 <style>
     @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 </style>
+
+<?php session_start() ?>

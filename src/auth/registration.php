@@ -6,6 +6,11 @@
 </head>
 <body class="overflow-x-hidden h-screen">
     <?php 
+
+        if(isset($_SESSION["email"])) {
+            exit(header("Location: /"));
+        }
+
         require_once(dirname(__FILE__) . "/../components/header.php"); 
 
         $header = new Header();
@@ -29,7 +34,7 @@
                         DataValidation::sanitize($_POST["firstname"]),
                         DataValidation::sanitize($_POST["lastname"]),
                         DataValidation::sanitize($_POST["email"]),
-                        $password
+                        DataValidation::hash_password($password)
                     );
 
                     $connection = new DBConnection();
@@ -67,6 +72,7 @@
             $registrationForm = new RegistrationForm();
             $registrationForm->render();
         ?>
+        <p class="m-3 text-xs font-montserrat text-center">Already have an account? <a class="text-ft-red" href="/auth/login.php">Login</a></p>
     </section>
 </body>
 </html>

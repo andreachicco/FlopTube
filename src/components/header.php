@@ -28,8 +28,11 @@
                                     <li class=\"hover:text-ft-red pl-sm-nav-links md:pl-md-nav-links lg:pl-lg-nav-links\"><a href=\"/auth/registration.php\">Register</a></li>");
                                 } 
                                 else {
-                                    print("<li class=\"hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links\"><a href=\"#\">Show Profile</a></li>
-                                    <li class=\"hover:text-ft-red pl-sm-nav-links md:pl-md-nav-links lg:pl-lg-nav-links\"><a href=\"/auth/logout.php\">Logout</a></li>");
+                                    print("
+                                        <li class=\"hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links\"><a href=\"#\">Create</a></li>
+                                        <li class=\"hover:text-ft-red p-sm-nav-links md:p-md-nav-links lg:p-lg-nav-links\"><a href=\"#\">Profile</a></li>
+                                        <li class=\"hover:text-ft-red pl-sm-nav-links md:pl-md-nav-links lg:pl-lg-nav-links\"><a href=\"/auth/logout.php\">Logout</a></li>
+                                    ");
                                 }
                             print("</ul>
                         </nav>

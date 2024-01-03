@@ -35,7 +35,7 @@
             }
 
             $row = $result->fetch_assoc();
-            return new User($row["first_name"], $row["last_name"], $row["email"], $row["password"]);
+            return new User($row["id"], $row["first_name"], $row["last_name"], $row["email"], $row["password"]);
         }
     }
 ?>

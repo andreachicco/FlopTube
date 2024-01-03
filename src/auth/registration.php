@@ -7,7 +7,7 @@
 <body class="overflow-x-hidden h-screen">
     <?php 
 
-        if(isset($_SESSION["email"])) {
+        if(isset($_SESSION["id"])) {
             exit(header("Location: /"));
         }
 
@@ -45,7 +45,7 @@
                     try {
                         $user_created = $user_table->create($user);
                         $connection->close();
-                        if($user_created) header("Location: /");
+                        if($user_created) header("Location: /auth/login.php");
                         else header("Location: /auth/registration.php?code=0");
                     }
                     catch(mysqli_sql_exception $e) {

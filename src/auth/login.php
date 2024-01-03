@@ -7,7 +7,7 @@
 <body class="overflow-x-hidden h-screen">
     <?php 
 
-        if(isset($_SESSION["email"])) {
+        if(isset($_SESSION["id"])) {
             exit(header("Location: /"));
         }
 
@@ -36,6 +36,7 @@
                     $connection->close();
                     if($user != null && password_verify($password, $user->get_password())) {
                         // session_start();
+                        $_SESSION["id"] = $user->get_id();
                         $_SESSION["email"] = $user->get_email();
                         $_SESSION["firstname"] = $user->get_firstname();
                         $_SESSION["lastname"] = $user->get_lastname();

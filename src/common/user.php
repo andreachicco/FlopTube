@@ -1,5 +1,6 @@
 <?php 
     class User {
+        private string $id;
         private string $firstname;
         private string $lastname;
         private string $email;
@@ -26,6 +27,18 @@
             $this->lastname = $lastname;
             $this->email = $email;
             $this->password = $password;
+        }
+
+        public function __construct5(string $id, string $firstname, string $lastname, string $email, string $password) {
+            $this->id = $id;
+            $this->firstname = $firstname;
+            $this->lastname = $lastname;
+            $this->email = $email;
+            $this->password = $password;
+        }
+
+        public function get_id() {
+            return $this->id;
         }
 
         public function get_firstname(): string {

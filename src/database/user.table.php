@@ -1,13 +1,9 @@
 <?php 
     // require_once(dirname(__FILE__) . "/../database/connection.php");
     require_once(dirname(__FILE__) . "/../common/user.php");
+    require_once(dirname(__FILE__) . "/../database/table.php");
 
-    class UserTable {
-        private DBConnection $db;
-
-        public function __construct(DBConnection $db) {
-            $this->db = $db;
-        }
+    class UserTable extends Table {
 
         public function create(User $user): bool {
             $query = "INSERT INTO user (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";

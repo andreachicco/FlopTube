@@ -30,24 +30,58 @@
 
                 $connection = new DBConnection();
                 $user_table = new UserTable($connection);
+                $user = null;
 
                 try {
                     $user = $user_table->get_by_email(DataValidation::sanitize($_POST["email"]));
-                    $connection->close();
-                    if($user != null && password_verify($password, $user->get_password())) {
-                        // session_start();
-                        $_SESSION["id"] = $user->get_id();
-                        $_SESSION["email"] = $user->get_email();
-                        $_SESSION["firstname"] = $user->get_firstname();
-                        $_SESSION["lastname"] = $user->get_lastname();
-                        header("Location: /");
-                    }
-                    else header("Location: /auth/login.php?code=4");
                 }
                 catch(mysqli_sql_exception $e) {
                     $connection->close();
                     header("Location: /auth/login.php?code=0");
                 }
+
+                if($user != null && password_verify($password, $user->get_password())) {
+                    // session_start();
+                    $_SESSION["id"] = $user->get_id();
+                    $_SESSION["email"] = $user->get_email();
+                    $_SESSION["firstname"] = $user->get_firstname();
+                    $_SESSION["lastname"] = $user->get_lastname();
+
+                    if(isset($_POST["remember_me"]) && $_POST["remember_me"] == "on") {
+                        require_once(dirname(__FILE__) . "/../database/cookie.table.php");
+                        require_once(dirname(__FILE__) . "/../common/cookie_handler.php");
+    
+                        $selector = CookieHandler::generate_token(16);
+                        $validator = CookieHandler::generate_token(32);
+                        $token = $selector . ":" . $validator;
+                        $expiry = CookieHandler::generate_expiry(30);
+    
+                        $cookie_table = new CookieTable($connection);
+                        
+    
+                        try {
+                            $is_created = $cookie_table->create([
+                                "user_id" => $user->get_id(),
+                                "selector" => $selector,
+                                "validator" => password_hash($validator, PASSWORD_DEFAULT),
+                                "expiry" => $expiry[0]
+                            ]);
+
+                            if($is_created) {
+                                setcookie("remember_me", $token, $expiry[1], "/");
+                            }
+                        }
+                        catch(mysqli_sql_exception $e) {
+                            $connection->close();
+                            header("Location: /auth/login.php?code=0");
+                        }
+                    }
+
+                    $connection->close();
+                    header("Location: /");
+                }
+                else header("Location: /auth/login.php?code=4");
+                
             }
             else header("Location: /auth/login.php?code=3");
         }

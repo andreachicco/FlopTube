@@ -1,12 +1,18 @@
 <?php 
     require_once(dirname(__FILE__) . "/../database/table.php");
+    require_once(dirname(__FILE__) . "/../auth/cookie_manager.php");
 
     class CookieTable extends Table {
-        public function create(array $cookie) {
+        public function create(Cookie $cookie, string $user_id) {
             $query = "INSERT INTO cookie (user_id, selector, validator, expiry) VALUES (?, ?, ?, ?)";
 
             $stmt = $this->db->prepare($query);
-            $stmt->bind_param("ssss", $cookie["user_id"], $cookie["selector"], $cookie["validator"], $cookie["expiry"]);
+
+            $value = $cookie->get_value();
+            $tokens = CookieManager::parse_token($value);
+            $expiry_seconds = $cookie->get_expiry_seconds();
+
+            $stmt->bind_param("ssss", $user_id, $tokens["selector"], $tokens["validator"], CookieManager::get_expired_date($expiry_seconds));
             return $stmt->execute();
         }
 

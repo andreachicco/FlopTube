@@ -16,6 +16,14 @@
             return $stmt->execute();
         }
 
+        public function delete_by_selector(string $selector) {
+            $query = "DELETE FROM cookie WHERE selector = ?";
+
+            $stmt = $this->db->prepare($query);
+            $stmt->bind_param("s", $selector);
+            return $stmt->execute();
+        }
+
         public function delete_by_user_id(string $user_id) {
             $query = "DELETE FROM cookie WHERE user_id = ?";
 
@@ -24,8 +32,17 @@
             return $stmt->execute();
         }
 
-        public function find_by_selector(string $selector) {
-            $query = "SELECT * FROM cookie WHERE selector = ?";
+        public function find_by_selector(string $selector, bool $include_user_data = false) {
+            $query = $include_user_data ? 
+                "SELECT * 
+                 FROM cookie AS c 
+                 JOIN user AS u 
+                 ON u.id = c.user_id 
+                 WHERE selector = ?" 
+                : 
+                "SELECT * 
+                 FROM cookie 
+                 WHERE selector = ?";
 
             $stmt = $this->db->prepare($query);
             $stmt->bind_param("s", $selector);

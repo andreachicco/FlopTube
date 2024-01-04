@@ -24,6 +24,62 @@
             ];
         }
 
+        public static function handle_cookie() {
+            
+            $cookie_value = self::get("remember");
+
+            if($cookie_value == null) return false;
+
+            $cookie = self::parse_token($cookie_value);
+            $selector = $cookie["selector"];
+            $validator = $cookie["validator"];
+
+            require_once(dirname(__FILE__) . "/../database/cookie.table.php");
+            require_once(dirname(__FILE__) . "/../database/connection.php");
+
+            $connection = new DBConnection();
+            $cookie_table = new CookieTable($connection);
+
+            try {
+                $db_cookie = $cookie_table->find_by_selector($selector, true);
+                print_r($db_cookie);
+
+                if($db_cookie == null) return false;
+                
+                if(password_verify($validator, $db_cookie["validator"])) {
+                    $expiry_data = $db_cookie["expiry"];
+                    $expity_seconds = strtotime($expiry_data);
+                    
+                    if($expity_seconds < time()) {
+                        $cookie_table->delete_by_user_id($db_cookie["user_id"]);
+                        return false;
+                    }
+
+                    require_once(dirname(__FILE__) . "/../auth/session_manager.php");
+                    require_once(dirname(__FILE__) . "/../auth/session.php");
+
+                    $session = new Session(
+                        $db_cookie["user_id"],
+                        $db_cookie["email"],
+                        $db_cookie["first_name"],
+                        $db_cookie["last_name"]
+                    );
+
+                    print_r($session);
+
+                    SessionManager::set($session);
+
+                    return true;
+                }
+            }
+            catch(mysqli_sql_exception $e) {
+                $connection->close();
+                return false;
+            }
+
+            return false;
+        }
+
         public static function set(Cookie $cookie): void {
             setcookie(
                 $cookie->get_name(),
@@ -37,7 +93,6 @@
         }
 
         public static function get(string $name): string | null {
-            print_r($_COOKIE);
             if(isset($_COOKIE[$name])) {
                 return $_COOKIE[$name];
             }

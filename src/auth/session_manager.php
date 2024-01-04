@@ -25,10 +25,8 @@
             session_destroy();
         }
 
-        public static function check_session_and_redirect(string $location): void {
-            if(isset($_SESSION["id"])) {
-                header("Location: " . $location);
-            }
+        public static function is_session_valid(): bool {
+            return isset($_SESSION["id"]);
         }
     }
 ?>

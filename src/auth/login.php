@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php require_once(dirname(__FILE__) . "/../common/head.php"); ?>
+    <?php 
+        require_once(dirname(__FILE__) . "/../auth/session_manager.php");
+        require_once(dirname(__FILE__) . "/../auth/cookie_manager.php");
+        SessionManager::start();
+        //check for active session
+        if(SessionManager::is_session_valid()) exit(header("Location: /"));
+        if(CookieManager::handle_cookie()) exit(header("Location: /"));
+        
+        require_once(dirname(__FILE__) . "/../common/head.php"); 
+    ?>
     <title>FlopTube | Login</title>
 </head>
 <body class="overflow-x-hidden h-screen">
     <?php 
-
-        require_once(dirname(__FILE__) . "/../auth/session_manager.php");
-        SessionManager::start();
-        //check for active session
-        SessionManager::check_session_and_redirect("/");
-
         require_once(dirname(__FILE__) . "/../components/header.php"); 
         $header = new Header();
         $header->render();  
-    ?>
 
-    <?php 
+
         if($_SERVER["REQUEST_METHOD"] === "POST") {
             require_once(dirname(__FILE__) . "/../auth/auth.php");
 

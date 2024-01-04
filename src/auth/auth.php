@@ -12,7 +12,15 @@
             require_once(dirname(__FILE__) . "/../database/connection.php");
             require_once(dirname(__FILE__) . "/../database/user.table.php");
             
-            $connection = new DBConnection();
+            $connection = null;
+
+            try {
+                $connection = new DBConnection();
+            }
+            catch(mysqli_sql_exception $e) {
+                exit(header("Location: /errors/500.php"));
+            }
+
             $user_table = new UserTable($connection);
             
             $user = null;
@@ -22,6 +30,7 @@
             } catch (mysqli_sql_exception $e) {
                 print($e);
                 $connection->close();
+                header("HTTP/1.1 500 Internal Server Error", true, 500);
                 header("Location: /auth/login.php?code=0");
             }
             
@@ -48,6 +57,9 @@
             if($remember_me != null && $remember_me == "on") {
                 $selector = CookieManager::generate_token(16);
                 $validator = CookieManager::generate_token(16);
+
+                $db_token = $selector . ":" . password_hash($validator, PASSWORD_DEFAULT);
+                $cookie_token = $selector . ":" . $validator;
                 
                 $expired_seconds = CookieManager::get_expired_seconds(30);
                 
@@ -55,13 +67,17 @@
                 $cookie_table = new CookieTable($connection);
 
                 try {
-                    $new_cookie = new Cookie("remember", "{$selector}:{$validator}", $expired_seconds, "/", "", false, false);
+                    $new_cookie = new Cookie("remember", $db_token, $expired_seconds, "/", "", false, false);
                     $is_created = $cookie_table->create($new_cookie, $user->get_id());
 
-                    if($is_created) CookieManager::set($new_cookie);
+                    if($is_created) { 
+                        $new_cookie->set_value($cookie_token);
+                        CookieManager::set($new_cookie);
+                    } 
                 }
                 catch(mysqli_sql_exception $e) {
                     $connection->close();
+                    header("HTTP/1.1 500 Internal Server Error", true, 500);
                     header("Location: /auth/login.php?code=0");
                 }
             } 

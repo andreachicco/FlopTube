@@ -26,6 +26,10 @@
             return $this->value;
         }
 
+        public function set_value(string $value): void {
+            $this->value = $value;
+        }
+
         public function get_expiry_seconds(): int {
             return $this->expiry_seconds;
         }

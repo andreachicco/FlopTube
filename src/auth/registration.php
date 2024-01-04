@@ -1,7 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php require_once(dirname(__FILE__) . "/../common/head.php"); ?>
+    <?php 
+        require_once(dirname(__FILE__) . "/../auth/session_manager.php");
+        require_once(dirname(__FILE__) . "/../auth/cookie_manager.php");
+        SessionManager::start();
+        //check for active session
+        if(SessionManager::is_session_valid()) exit(header("Location: /"));
+        if(CookieManager::handle_cookie()) exit(header("Location: /"));
+
+        require_once(dirname(__FILE__) . "/../common/head.php"); 
+    ?>
     <title>FlopTube | Register</title>
 </head>
 <body class="overflow-x-hidden h-screen">
@@ -18,45 +27,11 @@
     ?>
 
     <?php 
-        require_once(dirname(__FILE__) . "/../common/data_validation.php");
-        require_once(dirname(__FILE__) . "/../database/connection.php");
 
+        require_once(dirname(__FILE__) . "/../auth/auth.php");
         if($_SERVER["REQUEST_METHOD"] === "POST") {
-            $required_fields = ["firstname", "lastname", "email", "pass", "confirm"];
-            if(DataValidation::fields_exist($_POST, $required_fields)) {
-                $password = trim($_POST["pass"]);
-                $confirm = trim($_POST["confirm"]);
-                
-                if($password === $confirm) {
-                    require_once(dirname(__FILE__) . "/../common/user.php");
-
-                    $user = new User(
-                        DataValidation::sanitize($_POST["firstname"]),
-                        DataValidation::sanitize($_POST["lastname"]),
-                        DataValidation::sanitize($_POST["email"]),
-                        DataValidation::hash_password($password)
-                    );
-
-                    $connection = new DBConnection();
-
-                    require_once(dirname(__FILE__) . "/../database/user.table.php");
-                    $user_table = new UserTable($connection);
-
-                    try {
-                        $user_created = $user_table->create($user);
-                        $connection->close();
-                        if($user_created) header("Location: /auth/login.php");
-                        else header("Location: /auth/registration.php?code=0");
-                    }
-                    catch(mysqli_sql_exception $e) {
-                        $connection->close();
-                        if($e->getCode() == 1062) header("Location: /auth/registration.php?code=1");
-                        else header("Location: /auth/registration.php?code=0");
-                    }
-                }
-                else header("Location: /auth/registration.php?code=2");
-            }
-            else header("Location: /auth/registration.php?code=3");
+            $auth = new Auth();
+            $auth->register();
         }
     ?>
 

@@ -1,7 +1,9 @@
 <?php 
 
     require_once(dirname(__FILE__) . "/../common/data_validation.php");
-
+    require_once(dirname(__FILE__) . "/../database/connection.php");
+    require_once(dirname(__FILE__) . "/../database/user.table.php");
+    
     class Auth {
         public function login() {
             $required_fields = ["email", "pass"];
@@ -9,8 +11,6 @@
             
             $password = trim($_POST["pass"]);
             
-            require_once(dirname(__FILE__) . "/../database/connection.php");
-            require_once(dirname(__FILE__) . "/../database/user.table.php");
             
             $connection = null;
 
@@ -30,7 +30,6 @@
             } catch (mysqli_sql_exception $e) {
                 print($e);
                 $connection->close();
-                header("HTTP/1.1 500 Internal Server Error", true, 500);
                 header("Location: /auth/login.php?code=0");
             }
             
@@ -77,13 +76,46 @@
                 }
                 catch(mysqli_sql_exception $e) {
                     $connection->close();
-                    header("HTTP/1.1 500 Internal Server Error", true, 500);
                     header("Location: /auth/login.php?code=0");
                 }
             } 
 
             $connection->close();
             header("Location: /");
+        }
+
+        public function register() {
+            $required_fields = ["firstname", "lastname", "email", "pass", "confirm"];
+            if(!DataValidation::fields_exist($_POST, $required_fields)) header("Location: /auth/registration.php?code=3");
+            
+            $password = trim($_POST["pass"]);
+            $confirm = trim($_POST["confirm"]);
+
+            if($password !== $confirm) header("Location: /auth/registration.php?code=2");
+
+            require_once(dirname(__FILE__) . "/../common/user.php");
+            
+            $user = new User(
+                DataValidation::sanitize($_POST["firstname"]),
+                DataValidation::sanitize($_POST["lastname"]),
+                DataValidation::sanitize($_POST["email"]),
+                DataValidation::hash_password($password)
+            );
+
+            $connection = new DBConnection();
+            $user_table = new UserTable($connection);
+
+            try {
+                $user_created = $user_table->create($user);
+                $connection->close();
+                if($user_created) header("Location: /auth/login.php");
+                else header("Location: /auth/registration.php?code=0");
+            }
+            catch(mysqli_sql_exception $e) {
+                $connection->close();
+                if($e->getCode() == 1062) header("Location: /auth/registration.php?code=1");
+                else header("Location: /auth/registration.php?code=0");
+            }
         }
     }
     ?>

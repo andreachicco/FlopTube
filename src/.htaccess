@@ -1,5 +1,13 @@
 RedirectMatch 403 ^/common/.*$
 RedirectMatch 403 ^/components/.*$
+RedirectMatch 403 ^/database/.*$
+
+RedirectMatch 403 ^/auth/auth.php*$
+RedirectMatch 403 ^/auth/cookie_manager.php*$
+RedirectMatch 403 ^/auth/cookie.php*$
+RedirectMatch 403 ^/auth/session_manager.php*$
+RedirectMatch 403 ^/auth/session.php*$
+
 ErrorDocument 403 /errors/403.php
 ErrorDocument 404 /errors/404.php
 ErrorDocument 500 /errors/500.php
